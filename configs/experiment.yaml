@@ -1,0 +1,12 @@
+asset_count: 6
+selected_assets: 3
+risk_aversion: 1.0
+random_seed: 42
+qaoa:
+  depth: 1
+  shots: 1024
+data:
+  start: "2020-01-01"
+  end: "2025-12-31"
+benchmark:
+  seeds: [42, 43, 44, 45, 46]
