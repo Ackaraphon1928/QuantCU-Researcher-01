@@ -6,6 +6,14 @@ from typing import Any
 import numpy as np
 
 
+class ExactEnumerationResult(dict):
+    """Dictionary-like result that also supports tuple-style unpacking: x, objective."""
+
+    def __iter__(self):
+        yield self["x"]
+        yield self["objective"]
+
+
 def validate_binary_vector(x: np.ndarray, n_assets: int | None = None) -> None:
     """Check that a candidate vector is binary and of the expected dimension."""
     arr = np.asarray(x, dtype=int)
@@ -85,8 +93,13 @@ def qubo_energy(x: np.ndarray, qubo: np.ndarray, linear: np.ndarray, penalty: fl
     return energy
 
 
-def solve_mvo(mu: np.ndarray, covariance: np.ndarray, risk_aversion: float = 1.0) -> np.ndarray:
-    """Solve the long-only MVO problem with a supported convex solver from the current environment."""
+def solve_mvo(mu: np.ndarray, covariance: np.ndarray, risk_aversion: float = 1.0, k: int | None = None) -> np.ndarray:
+    """Solve the long-only MVO problem with a supported convex solver from the current environment.
+
+    The optional ``k`` argument is accepted for compatibility with notebooks and callers that
+    pass a cardinality value, but it is ignored because this is the continuous unconstrained
+    baseline problem.
+    """
     import cvxpy as cp
 
     mu = np.asarray(mu, dtype=float)
@@ -103,7 +116,11 @@ def solve_mvo(mu: np.ndarray, covariance: np.ndarray, risk_aversion: float = 1.0
 
 
 def exact_enumeration(mu: np.ndarray, covariance: np.ndarray, k: int, risk_aversion: float = 1.0) -> dict[str, Any]:
-    """Enumerate all feasible binary vectors for a small instance and return the optimum."""
+    """Enumerate all feasible binary vectors for a small instance and return the optimum.
+
+    The returned object behaves like a dictionary for existing callers, but also supports
+    unpacking as ``x, objective`` to match the notebook usage.
+    """
     mu = np.asarray(mu, dtype=float)
     cov = np.asarray(covariance, dtype=float)
     best_obj = -np.inf
@@ -118,7 +135,9 @@ def exact_enumeration(mu: np.ndarray, covariance: np.ndarray, k: int, risk_avers
             best_x = x.copy()
     if best_x is None:
         raise ValueError("No feasible solution found under the cardinality constraint.")
-    return {"x": best_x, "objective": float(best_obj), "k": k}
+
+    result = ExactEnumerationResult({"x": best_x, "objective": float(best_obj), "k": k})
+    return result
 
 
 def decode_bitstring(bitstring: np.ndarray | list[int]) -> tuple[int, ...]:

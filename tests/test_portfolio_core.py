@@ -64,6 +64,11 @@ def test_mvo_returns_valid_weights(synthetic_data):
     assert np.isclose(weights.sum(), 1.0)
     assert np.all(weights >= -1e-8)
 
+    weights_with_k = solve_mvo(mu, cov, risk_aversion=1.0, k=None)
+    assert weights_with_k.shape == mu.shape
+    assert np.isclose(weights_with_k.sum(), 1.0)
+    assert np.all(weights_with_k >= -1e-8)
+
 
 def test_discrete_qubo_matches_portfolio_objective(synthetic_data):
     mu, cov = synthetic_data
@@ -88,10 +93,25 @@ def test_exact_enumeration_finds_valid_solution(synthetic_data):
     assert best["x"].sum() == 2
     assert np.isfinite(best["objective"])
 
+    x, objective = exact_enumeration(mu, cov, k=2, risk_aversion=1.0)
+    assert x.shape == mu.shape
+    assert x.sum() == 2
+    assert np.isfinite(objective)
+
 
 def test_ga_and_sa_return_valid_bitstrings(synthetic_data):
     mu, cov = synthetic_data
-    ga = genetic_algorithm(mu, cov, k=2, seed=123, population_size=20, generations=30)
+    ga = genetic_algorithm(
+        mu,
+        cov,
+        k=2,
+        seed=123,
+        population_size=20,
+        generations=30,
+        mutation_rate=0.1,
+        elite_fraction=0.2,
+        risk_aversion=1.0,
+    )
     sa = simulated_annealing(mu, cov, k=2, seed=123, iterations=200)
     assert ga["x"].sum() == 2
     assert sa["x"].sum() == 2
