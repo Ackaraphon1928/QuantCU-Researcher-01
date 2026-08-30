@@ -24,13 +24,46 @@ def portfolio_volatility(weights: np.ndarray, covariance: np.ndarray) -> float:
     return float(np.sqrt(max(portfolio_variance(weights, covariance), 0.0)))
 
 
-def sharpe_ratio(weights: np.ndarray, expected_returns: np.ndarray, covariance: np.ndarray, risk_free: float = 0.0) -> float:
-    """Compute the Sharpe ratio for a portfolio."""
+def sharpe_ratio(
+    weights_or_returns: np.ndarray,
+    expected_returns: np.ndarray | None = None,
+    covariance: np.ndarray | None = None,
+    risk_free: float = 0.0,
+    annual: bool = False,
+) -> float:
+    """Compute a Sharpe ratio.
+
+    Supports the original portfolio-based API:
+        sharpe_ratio(weights, expected_returns, covariance, risk_free=0.0)
+
+    and a convenience form used in the notebooks:
+        sharpe_ratio(returns_array, annual=True)
+    """
+    if expected_returns is None and covariance is None:
+        returns = np.asarray(weights_or_returns, dtype=float)
+        if returns.size == 0:
+            return 0.0
+        mean_ret = float(np.mean(returns))
+        std_ret = float(np.std(returns, ddof=0))
+        if std_ret == 0:
+            return 0.0
+        ratio = (mean_ret - risk_free) / std_ret
+        if annual:
+            ratio *= np.sqrt(252)
+        return float(ratio)
+
+    if expected_returns is None or covariance is None:
+        raise ValueError("Both expected_returns and covariance must be provided for portfolio Sharpe ratios.")
+
+    weights = np.asarray(weights_or_returns, dtype=float)
     expected = portfolio_return(weights, expected_returns)
     vol = portfolio_volatility(weights, covariance)
     if vol == 0:
         return 0.0
-    return float((expected - risk_free) / vol)
+    ratio = float((expected - risk_free) / vol)
+    if annual:
+        ratio *= np.sqrt(252)
+    return ratio
 
 
 def sortino_ratio(weights: np.ndarray, expected_returns: np.ndarray, covariance: np.ndarray, risk_free: float = 0.0) -> float:

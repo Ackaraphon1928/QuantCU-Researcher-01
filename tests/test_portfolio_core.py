@@ -137,6 +137,7 @@ def test_portfolio_metrics_are_finite():
     assert np.isfinite(portfolio_volatility(weights, cov))
     assert np.isfinite(sharpe_ratio(weights, returns, cov, risk_free=0.01))
     assert np.isfinite(sortino_ratio(weights, returns, cov, risk_free=0.01))
+    assert np.isfinite(sharpe_ratio(np.array([0.01, 0.02, -0.01, 0.03]), annual=True, risk_free=0.01))
     assert np.isfinite(max_drawdown(np.array([1.0, 1.02, 0.98, 1.03])))
     assert np.isfinite(calmar_ratio(np.array([1.0, 1.02, 0.98, 1.03]), 252))
 
