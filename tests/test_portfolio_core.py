@@ -142,6 +142,13 @@ def test_walk_forward_backtest_splits_correctly():
     assert train.index[0] < test.index[0]
 
 
+def test_default_price_data_accepts_legacy_kwargs():
+    prices = build_default_price_data(n_assets=4, n_days=120, seed=42)
+    assert prices.shape == (120, 4)
+    assert list(prices.columns) == ["AAPL", "MSFT", "AMZN", "GOOGL"]
+    assert prices.notna().all().all()
+
+
 def test_default_price_data_is_deterministic_and_complete():
     prices = build_default_price_data()
     assert list(prices.columns) == ["AAPL", "MSFT", "AMZN", "GOOGL"]

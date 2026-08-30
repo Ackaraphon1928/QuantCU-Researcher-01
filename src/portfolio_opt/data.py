@@ -15,9 +15,25 @@ class DataConfig:
     source: str = "yahoo"
 
 
-def build_default_price_data() -> pd.DataFrame:
-    """Create a deterministic, small universe of synthetic daily prices for local benchmarking."""
-    dates = pd.date_range(start="2020-01-02", periods=120, freq="B")
+def build_default_price_data(
+    n_assets: int | None = None,
+    n_days: int | None = None,
+    seed: int | None = None,
+) -> pd.DataFrame:
+    """Create a deterministic, small universe of synthetic daily prices for local benchmarking.
+
+    This accepts the legacy keyword arguments used by the notebook examples while preserving the
+    default 4-asset, 120-day deterministic behavior.
+    """
+    if n_assets is None:
+        n_assets = 4
+    if n_days is None:
+        n_days = 120
+    if seed is None:
+        seed = 42
+
+    tickers = ["AAPL", "MSFT", "AMZN", "GOOGL"][:n_assets]
+    dates = pd.date_range(start="2020-01-02", periods=n_days, freq="B")
     base = {
         "AAPL": 100.0,
         "MSFT": 150.0,
@@ -28,8 +44,8 @@ def build_default_price_data() -> pd.DataFrame:
     volatility = {"AAPL": 0.015, "MSFT": 0.013, "AMZN": 0.017, "GOOGL": 0.014}
 
     frames: list[pd.Series] = []
-    for ticker in ["AAPL", "MSFT", "AMZN", "GOOGL"]:
-        rng = np.random.default_rng(42 + len(ticker))
+    for ticker in tickers:
+        rng = np.random.default_rng(seed + len(ticker))
         path = np.empty(len(dates), dtype=float)
         path[0] = base[ticker]
         for i in range(1, len(dates)):
@@ -38,7 +54,7 @@ def build_default_price_data() -> pd.DataFrame:
         frames.append(pd.Series(path, index=dates, name=ticker))
 
     prices = pd.concat(frames, axis=1)
-    prices.columns = ["AAPL", "MSFT", "AMZN", "GOOGL"]
+    prices.columns = tickers
     return prices
 
 
