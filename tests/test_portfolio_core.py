@@ -112,7 +112,16 @@ def test_ga_and_sa_return_valid_bitstrings(synthetic_data):
         elite_fraction=0.2,
         risk_aversion=1.0,
     )
-    sa = simulated_annealing(mu, cov, k=2, seed=123, iterations=200)
+    sa = simulated_annealing(
+        mu,
+        cov,
+        k=2,
+        seed=123,
+        iterations=200,
+        initial_temp=1.0,
+        cooling_factor=0.995,
+        risk_aversion=1.0,
+    )
     assert ga["x"].sum() == 2
     assert sa["x"].sum() == 2
     assert np.isfinite(ga["objective"])

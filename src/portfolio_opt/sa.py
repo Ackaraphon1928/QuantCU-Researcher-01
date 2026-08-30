@@ -5,15 +5,28 @@ import numpy as np
 from .portfolio import discrete_objective
 
 
-def simulated_annealing(mu: np.ndarray, covariance: np.ndarray, k: int, seed: int = 0, iterations: int = 200, initial_temp: float = 1.0, cooling: float = 0.995) -> dict:
-    """Simulated annealing on a binary K-cardinality portfolio selection problem."""
+def simulated_annealing(
+    mu: np.ndarray,
+    covariance: np.ndarray,
+    k: int,
+    seed: int = 0,
+    iterations: int = 200,
+    initial_temp: float = 1.0,
+    cooling_factor: float = 0.995,
+    risk_aversion: float = 1.0,
+) -> dict:
+    """Simulated annealing on a binary K-cardinality portfolio selection problem.
+
+    The notebook passes ``cooling_factor`` and ``risk_aversion``; those names are accepted
+    here for compatibility with the benchmark configuration.
+    """
     rng = np.random.default_rng(seed)
     n = len(mu)
     current = np.zeros(n, dtype=int)
     selected = rng.choice(n, size=k, replace=False)
     current[selected] = 1
 
-    current_obj = discrete_objective(current, mu, covariance, k)
+    current_obj = discrete_objective(current, mu, covariance, k, risk_aversion=risk_aversion)
     best = current.copy()
     best_obj = current_obj
     temperature = initial_temp
@@ -32,7 +45,7 @@ def simulated_annealing(mu: np.ndarray, covariance: np.ndarray, k: int, seed: in
             candidate[unselected_idx] = 0
         if candidate.sum() != k:
             continue
-        candidate_obj = discrete_objective(candidate, mu, covariance, k)
+        candidate_obj = discrete_objective(candidate, mu, covariance, k, risk_aversion=risk_aversion)
         delta = candidate_obj - current_obj
         if delta > 0 or rng.random() < np.exp(delta / max(temperature, 1e-12)):
             current = candidate
@@ -41,6 +54,14 @@ def simulated_annealing(mu: np.ndarray, covariance: np.ndarray, k: int, seed: in
             best = candidate.copy()
             best_obj = candidate_obj
         history.append(best_obj)
-        temperature *= cooling
+        temperature *= cooling_factor
 
-    return {"x": best.astype(int), "objective": float(best_obj), "history": history, "iterations": iterations}
+    return {
+        "x": best.astype(int),
+        "objective": float(best_obj),
+        "history": history,
+        "iterations": iterations,
+        "initial_temp": initial_temp,
+        "cooling_factor": cooling_factor,
+        "risk_aversion": risk_aversion,
+    }
