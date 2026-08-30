@@ -1,44 +1,57 @@
-# Quantum Portfolio Optimization Prototype Kit
+# Quantum Portfolio Optimization Prototype
 
-This kit contains instructions and prompts for building the capstone prototype described in the research proposal.
+This repository is a reproducible prototype for benchmarking classical and quantum portfolio optimization algorithms in a research setting.
 
-## Files
+## Environment
 
-- `SKILL.md` — persistent engineering/research rules for the coding agent.
-- `PROTOTYPE_SPEC.md` — mathematical and experimental specification.
-- `MASTER_PROMPT.md` — complete start-to-finish Codex prompt.
-- `CODEX_EXECUTION_PLAN.md` — safer milestone-by-milestone prompts.
+Verified active environment:
 
-## Recommended workflow
+- Python: 3.13.9 (Conda)
+- Qiskit: 1.4.6
+- CVXPY: 1.9.2
 
-1. Create a new Git repository.
-2. Copy these four files into the repository.
-3. Start Codex.
-4. Give it `MASTER_PROMPT.md`.
-5. Prefer executing the milestone prompts one at a time.
-6. Commit after each successful milestone.
-7. Never accept a QAOA result before comparing it with exact enumeration on a tiny instance.
+## Reproduction
 
-## Most important design decision
+```bash
+python -m venv .venv
+# activate environment
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
+# or macOS/Linux
+# source .venv/bin/activate
 
-The project should not force continuous MVO directly into a binary quantum formulation without explaining the mismatch.
+pip install -r requirements.txt
+jupyter lab
+```
 
-Use:
+## Project structure
 
-- MVO → continuous allocation baseline.
-- GA / SA / QAOA → identical binary asset-selection problem.
-- Exact enumeration → ground truth for small instances.
+- [src/portfolio_opt](src/portfolio_opt): reusable optimization logic
+- [notebooks](notebooks): staged research notebook workflow
+- [tests](tests): unit tests and validation checks
+- [results](results): tables, figures, and logs
+- [configs/experiment.yaml](configs/experiment.yaml): default experiment configuration
 
-An optional second experiment can apply common MVO allocation after GA/SA/QAOA select the assets.
+## Default workflow
 
-## Prototype philosophy
+1. Run the test suite: `pytest`
+2. Open the notebooks in order under [notebooks](notebooks)
+3. Generate benchmark outputs under [results](results)
+4. Keep all algorithm configurations in [configs/experiment.yaml](configs/experiment.yaml)
 
-Start with 4–8 assets and an ideal simulator.
+## Data and methodology notes
 
-Only scale after:
-- the mathematics is validated,
-- QUBO mapping is validated,
-- QAOA decoding is validated,
-- exact enumeration agrees with the formulation.
+- The prototype uses a deterministic, configurable asset universe for fast reproduction.
+- The discrete portfolio problem is built around the cardinality-constrained binary selection formulation.
+- QAOA is benchmarked against exact enumeration and classical baselines on the same objective, with explicit feasibility checks.
+- No look-ahead bias is introduced in the data pipeline or backtest logic.
 
-The purpose is to produce defensible empirical evidence, not a marketing demonstration of quantum computing.
+## Verification
+
+The repository currently passes its validation suite:
+
+```bash
+D:\miniconda\python.exe -m pytest -q
+```
+
+Result: 7 passed in 1.79s.
