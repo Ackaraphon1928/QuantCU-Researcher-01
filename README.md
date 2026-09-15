@@ -256,7 +256,7 @@ print(f"Max drawdown: {drawdown:.2%}")
 print(f"Sortino ratio: {sortino:.2f}")
 ```
 
-## 📈 Key Results (Default 4-Asset Problem)
+##  Key Results (Default 4-Asset Problem)
 
 From the full benchmark on default data (n=4, k=2, λ=1.0):
 
@@ -376,7 +376,7 @@ See [08_final_benchmark.ipynb](notebooks/08_final_benchmark.ipynb) for complete 
 - Portfolio rebalancing with turnover constraints
 - Robust portfolio optimization with uncertainty sets
 
-## 📖 References & Further Reading
+##  References & Further Reading
 
 **Portfolio Optimization**:
 
