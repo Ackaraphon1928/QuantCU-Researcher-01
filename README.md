@@ -2,7 +2,7 @@
 
 A reproducible research framework for benchmarking quantum (QAOA) and classical (GA, SA, MVO, Exact) algorithms on the discrete K-cardinality portfolio selection problem.
 
-## 🎯 Overview
+##  Overview
 
 This prototype implements a complete pipeline for portfolio optimization research:
 
@@ -10,11 +10,11 @@ This prototype implements a complete pipeline for portfolio optimization researc
 
 **Algorithms Implemented**:
 
-- ✅ **Exact Enumeration** — Brute-force optimal solution (ground truth for n ≤ 12)
-- ✅ **Genetic Algorithm** — Population-based evolutionary optimizer
-- ✅ **Simulated Annealing** — Temperature-based local search with swap moves
-- ✅ **MVO (Continuous)** — Mean-variance optimization convex baseline
-- ✅ **QAOA** — Quantum Approximate Optimization Algorithm (Qiskit AerSimulator)
+-  **Exact Enumeration** — Brute-force optimal solution (ground truth for n ≤ 12)
+-  **Genetic Algorithm** — Population-based evolutionary optimizer
+-  **Simulated Annealing** — Temperature-based local search with swap moves
+-  **MVO (Continuous)** — Mean-variance optimization convex baseline
+-  **QAOA** — Quantum Approximate Optimization Algorithm (Qiskit AerSimulator)
 
 **Key Features**:
 
@@ -25,7 +25,7 @@ This prototype implements a complete pipeline for portfolio optimization researc
 - Full test coverage with 12 regression tests
 - Publication-ready research notebooks with visualizations
 
-## 📋 Environment Setup
+##  Environment Setup
 
 **Requirements**:
 
@@ -57,7 +57,7 @@ pytest tests/test_portfolio_core.py -v
 - NumPy 2.2.6, Pandas 2.3.3, SciPy 1.16.3
 - Pytest 8.4.2, Matplotlib 3.11.1
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 prototype_quantum_port_optimization/
@@ -99,7 +99,7 @@ prototype_quantum_port_optimization/
 └── README.md                         # This file
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Run Tests
 
@@ -142,7 +142,7 @@ print('Benchmark complete. Results in results/tables/benchmark_results.csv')
 "
 ```
 
-## 🔬 Features & Capabilities
+##  Features & Capabilities
 
 ### Data Pipeline
 
@@ -162,11 +162,11 @@ print('Benchmark complete. Results in results/tables/benchmark_results.csv')
 
 | Algorithm | Type          | Guarantee     | Scalability | Notes                                 |
 | --------- | ------------- | ------------- | ----------- | ------------------------------------- |
-| Exact     | Optimal       | ✅ Guaranteed | n ≤ 12      | Brute-force ground truth              |
-| MVO       | Continuous    | ⚠️ Relaxation | n ≤ 1000    | Convex baseline, discretized by top-k |
-| GA        | Metaheuristic | ❌ None       | n ≤ 50      | Population-based, elite preservation  |
-| SA        | Metaheuristic | ❌ None       | n ≤ 50      | Temperature-based, swap moves         |
-| QAOA      | Quantum       | ❌ Heuristic  | n ≤ 20      | Ideal simulator, p=1 depth default    |
+| Exact     | Optimal       |  Guaranteed | n ≤ 12      | Brute-force ground truth              |
+| MVO       | Continuous    |  Relaxation | n ≤ 1000    | Convex baseline, discretized by top-k |
+| GA        | Metaheuristic |  None       | n ≤ 50      | Population-based, elite preservation  |
+| SA        | Metaheuristic |  None       | n ≤ 50      | Temperature-based, swap moves         |
+| QAOA      | Quantum       |  Heuristic  | n ≤ 20      | Ideal simulator, p=1 depth default    |
 
 ### Walk-Forward Backtesting
 
@@ -177,14 +177,14 @@ print('Benchmark complete. Results in results/tables/benchmark_results.csv')
 
 ### Validation & Testing
 
-- ✅ 12 regression tests, all passing
-- ✅ Data determinism verified (same seed → same results)
-- ✅ Cardinality constraints verified (all algorithms return exactly k assets)
-- ✅ QUBO algebra validated (objective matches energy formula)
-- ✅ Portfolio metrics sanity-checked (finite, reasonable ranges)
-- ✅ Walk-forward structure validated (proper chronological ordering)
+-  12 regression tests, all passing
+-  Data determinism verified (same seed → same results)
+-  Cardinality constraints verified (all algorithms return exactly k assets)
+-  QUBO algebra validated (objective matches energy formula)
+-  Portfolio metrics sanity-checked (finite, reasonable ranges)
+-  Walk-forward structure validated (proper chronological ordering)
 
-## 📊 Usage Examples
+##  Usage Examples
 
 ### Example 1: Compare All Algorithms on Default Problem
 
@@ -262,15 +262,15 @@ From the full benchmark on default data (n=4, k=2, λ=1.0):
 
 | Algorithm | Objective | Gap from Exact | Feasible | Notes                           |
 | --------- | --------- | -------------- | -------- | ------------------------------- |
-| Exact     | 0.123456  | 0.00%          | ✅       | Optimal (6 combinations)        |
-| GA        | 0.123456  | 0.00%          | ✅       | Finds optimum consistently      |
-| SA        | 0.123456  | 0.00%          | ✅       | Finds optimum consistently      |
-| QAOA      | 0.123456  | 0.00%          | ✅       | Good results, ~95% feasibility  |
-| MVO       | 0.123450  | 0.00%          | ✅       | Discretized continuous solution |
+| Exact     | 0.123456  | 0.00%          |         | Optimal (6 combinations)        |
+| GA        | 0.123456  | 0.00%          |         | Finds optimum consistently      |
+| SA        | 0.123456  | 0.00%          |         | Finds optimum consistently      |
+| QAOA      | 0.123456  | 0.00%          |         | Good results, ~95% feasibility  |
+| MVO       | 0.123450  | 0.00%          |         | Discretized continuous solution |
 
 _Note: Results vary based on random seed and problem instance. See notebooks for complete analysis._
 
-## 🔑 Critical Technical Points
+##  Critical Technical Points
 
 ### QUBO Formulation
 
@@ -305,7 +305,7 @@ Walk-forward backtesting ensures:
 - Test window [t₀+120, t₀+150] has no influence on training
 - Rebalancing decisions use only information available at decision point
 
-## 🧪 Validation & Verification
+##  Validation & Verification
 
 All code is validated through regression tests:
 
@@ -328,7 +328,7 @@ tests/test_portfolio_core.py::test_missing_prices_are_cleaned_and_reported PASSE
 ========================= 12 passed in ~15 seconds =========================
 ```
 
-## 📚 Research Methodology
+##  Research Methodology
 
 This prototype follows best practices for quantum-classical algorithm comparison:
 
@@ -351,7 +351,7 @@ See [08_final_benchmark.ipynb](notebooks/08_final_benchmark.ipynb) for complete 
 - Scalability discussion
 - Limitations and future work
 
-## 🚀 Next Steps & Future Work
+##  Next Steps & Future Work
 
 **For Researchers**:
 
@@ -394,7 +394,7 @@ See [08_final_benchmark.ipynb](notebooks/08_final_benchmark.ipynb) for complete 
 - Qiskit documentation: https://qiskit.org/
 - CVXPY documentation: https://www.cvxpy.org/
 
-## 📝 Citation
+##  Citation
 
 If you use this prototype in research, please cite:
 
@@ -407,11 +407,11 @@ If you use this prototype in research, please cite:
 }
 ```
 
-## 📄 License
+##  License
 
 [Specify your license here, e.g., MIT, Apache 2.0, etc.]
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Please ensure:
 
@@ -420,11 +420,11 @@ Contributions welcome! Please ensure:
 - Docstrings follow NumPy style
 - Notebooks are reproducible with seeded RNG
 
-## ✉️ Contact & Support
+##  Contact & Support
 
 For questions, issues, or suggestions, please open an issue in this repository.
 
 ---
 
 **Last Updated**: 2024  
-**Status**: ✅ All 12 tests passing | ✅ Notebooks validated | ✅ Complete implementation
+**Status**:  All 12 tests passing |  Notebooks validated |  Complete implementation
